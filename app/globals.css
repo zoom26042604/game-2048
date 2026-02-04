@@ -1,26 +1,1113 @@
 @import "tailwindcss";
 
+/* ========================================
+   CATPPUCCIN THEME - Like Portfolio
+   ======================================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Catppuccin Latte (Light) */
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+  
+  /* Theme variables */
+  --bg-color: var(--ctp-base);
+  --text-color: var(--ctp-text);
+  --text-muted: var(--ctp-subtext0);
+  --surface: var(--ctp-surface0);
+  --surface-light: var(--ctp-surface1);
+  --accent: var(--ctp-peach);
+  --board-bg: var(--ctp-surface1);
+  --cell-bg: var(--ctp-surface0);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Dark mode (Catppuccin Mocha) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+    
+    --bg-color: var(--ctp-base);
+    --text-color: var(--ctp-text);
+    --text-muted: var(--ctp-subtext0);
+    --surface: var(--ctp-surface0);
+    --surface-light: var(--ctp-surface1);
+    --accent: var(--ctp-peach);
+    --board-bg: var(--ctp-surface1);
+    --cell-bg: var(--ctp-surface0);
   }
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========================================
+   PAGE LAYOUT - Game centered, scores top, leaderboard right
+   ======================================== */
+.page-container {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Global title - top left */
+.global-title {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--ctp-peach);
+  line-height: 1;
+  z-index: 10;
+}
+
+/* Score header - absolute top center */
+.top-score-header {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 10;
+}
+
+/* Game - absolutely centered in the page */
+.game-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+/* Leaderboard - fixed right, vertically centered */
+.leaderboard-fixed {
+  position: fixed;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  max-height: calc(100vh - 60px);
+  z-index: 20;
+}
+
+/* ========================================
+   GAME WRAPPER
+   ======================================== */
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Score boxes */
+.score-box {
+  background: var(--ctp-surface0);
+  border-radius: 8px;
+  padding: 8px 20px;
+  min-width: 90px;
+  text-align: center;
+  border: 1px solid var(--ctp-surface1);
+  height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ctp-subtext0);
+  letter-spacing: 0.5px;
+}
+
+.score-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ctp-text);
+}
+
+/* New Game button */
+.new-game-btn {
+  background: var(--ctp-peach);
+  color: var(--ctp-base);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 20px;
+  height: 54px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.new-game-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Subtitle */
+.game-subtitle {
+  font-size: 16px;
+  color: var(--ctp-subtext0);
+  margin-bottom: 20px;
+}
+
+.game-subtitle strong {
+  font-weight: 700;
+  color: var(--ctp-peach);
+}
+
+/* ========================================
+   GAME BOARD
+   ======================================== */
+.game-board-container {
+  position: relative;
+  width: 500px;
+  max-width: 500px;
+}
+
+.game-board {
+  position: relative;
+  background: var(--board-bg);
+  border-radius: 12px;
+  padding: 12px;
+  width: 500px;
+  height: 500px;
+  touch-action: none;
+  user-select: none;
+  border: 1px solid var(--ctp-surface2);
+}
+
+.board-background {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.cell-bg {
+  background: var(--cell-bg);
+  border-radius: 8px;
+}
+
+.tiles-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ========================================
+   TILES - Catppuccin colors (like portfolio)
+   ======================================== */
+.tile {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 700;
+  transition: top 0.12s ease-out, left 0.12s ease-out;
+}
+
+.tile-0 {
+  background: transparent;
+}
+
+.tile-2 {
+  background: var(--ctp-rosewater);
+  color: #1e1e2e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.tile-4 {
+  background: var(--ctp-flamingo);
+  color: #1e1e2e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.tile-8 {
+  background: var(--ctp-peach);
+  color: #1e1e2e;
+  box-shadow: 0 2px 10px var(--ctp-peach);
+}
+
+.tile-16 {
+  background: var(--ctp-yellow);
+  color: #1e1e2e;
+  box-shadow: 0 2px 10px var(--ctp-yellow);
+}
+
+.tile-32 {
+  background: var(--ctp-green);
+  color: #1e1e2e;
+  box-shadow: 0 2px 10px var(--ctp-green);
+}
+
+.tile-64 {
+  background: var(--ctp-teal);
+  color: #1e1e2e;
+  box-shadow: 0 2px 12px var(--ctp-teal);
+}
+
+.tile-128 {
+  background: var(--ctp-sky);
+  color: #1e1e2e;
+  box-shadow: 0 0 16px 4px var(--ctp-sky);
+}
+
+.tile-256 {
+  background: var(--ctp-sapphire);
+  color: #1e1e2e;
+  box-shadow: 0 0 16px 4px var(--ctp-sapphire);
+}
+
+.tile-512 {
+  background: var(--ctp-blue);
+  color: white;
+  box-shadow: 0 0 18px 6px var(--ctp-blue);
+}
+
+.tile-1024 {
+  background: var(--ctp-lavender);
+  color: #1e1e2e;
+  box-shadow: 0 0 20px 6px var(--ctp-lavender);
+}
+
+.tile-2048 {
+  background: var(--ctp-mauve);
+  color: white;
+  box-shadow: 0 0 24px 8px var(--ctp-mauve);
+}
+
+.tile-super {
+  background: var(--ctp-pink);
+  color: #1e1e2e;
+  box-shadow: 0 0 24px 8px var(--ctp-pink);
+}
+
+/* ========================================
+   GAME OVERLAYS
+   ======================================== */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.overlay-win {
+  background: rgba(203, 166, 247, 0.95);
+  color: #1e1e2e;
+}
+
+.overlay-gameover {
+  background: var(--ctp-surface0);
+  opacity: 0.98;
+  color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .overlay-gameover {
+    background: rgba(49, 50, 68, 0.98);
+  }
+}
+
+.overlay-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.overlay-subtitle {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* Score display in overlay */
+.overlay-score-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.overlay-score-display > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.trophy-icon {
+  color: var(--ctp-yellow);
+}
+
+.score-label-overlay {
+  font-size: 14px;
+  color: var(--ctp-subtext0);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.score-value-overlay {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ctp-peach);
+}
+
+/* Submit form in overlay */
+.overlay-submit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.name-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ctp-overlay0);
+  pointer-events: none;
+}
+
+.name-input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  font-size: 16px;
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 10px;
+  background: var(--ctp-base);
+  color: var(--ctp-text);
+  outline: none;
+  transition: all 0.15s;
+}
+
+.name-input:focus {
+  border-color: var(--ctp-peach);
+  box-shadow: 0 0 0 3px rgba(250, 179, 135, 0.2);
+}
+
+.name-input::placeholder {
+  color: var(--ctp-overlay0);
+}
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  background: var(--ctp-peach);
+  color: #1e1e2e;
+  font-weight: 700;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-submit:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Secondary button (Skip) */
+.btn-retry-secondary {
+  background: transparent;
+  color: var(--ctp-text);
+  font-weight: 600;
+  padding: 12px 24px;
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-retry-secondary:hover {
+  background: var(--ctp-surface1);
+  border-color: var(--ctp-surface2);
+}
+
+/* Submitted state */
+.overlay-submitted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.rank-display {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ctp-mauve);
+}
+
+.submitted-text {
+  font-size: 16px;
+  color: var(--ctp-green);
+  font-weight: 600;
+}
+
+.overlay-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-retry {
+  background: var(--ctp-peach);
+  color: #1e1e2e;
+  font-weight: 700;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.btn-retry:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-continue {
+  background: transparent;
+  color: var(--ctp-text);
+  font-weight: 600;
+  padding: 14px 28px;
+  border: 2px solid var(--ctp-surface2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+}
+
+.btn-continue:hover {
+  background: var(--ctp-surface0);
+}
+
+/* ========================================
+   INSTRUCTIONS
+   ======================================== */
+.game-instructions {
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ctp-subtext0);
+}
+
+.game-instructions strong {
+  font-weight: 700;
+  color: var(--ctp-text);
+}
+
+/* ========================================
+   LEADERBOARD - Catppuccin style with scroll & search
+   ======================================== */
+.leaderboard {
+  background: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+}
+
+.leaderboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.leaderboard-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ctp-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.leaderboard-title svg {
+  color: var(--ctp-yellow);
+}
+
+/* Search input */
+.leaderboard-search {
+  position: relative;
+}
+
+.leaderboard-search-input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  font-size: 14px;
+  border: 1px solid var(--ctp-surface2);
+  border-radius: 8px;
+  background: var(--ctp-base);
+  color: var(--ctp-text);
+  outline: none;
+  transition: all 0.15s;
+}
+
+.leaderboard-search-input:focus {
+  border-color: var(--ctp-peach);
+  box-shadow: 0 0 0 2px rgba(250, 179, 135, 0.15);
+}
+
+.leaderboard-search-input::placeholder {
+  color: var(--ctp-overlay0);
+}
+
+.leaderboard-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ctp-overlay0);
+  pointer-events: none;
+}
+
+/* Scrollable list */
+.leaderboard-scroll {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 4px;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--ctp-base);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+
+.leaderboard-item:hover {
+  border-color: var(--ctp-surface2);
+}
+
+.leaderboard-item.top-3 {
+  background: linear-gradient(135deg, var(--ctp-surface0), var(--ctp-surface1));
+  border-color: var(--ctp-mauve);
+}
+
+.rank {
+  width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ctp-text);
+}
+
+.player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-name {
+  font-weight: 600;
+  color: var(--ctp-text);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-details {
+  font-size: 11px;
+  color: var(--ctp-subtext0);
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.player-score {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ctp-peach);
+}
+
+.leaderboard-empty {
+  text-align: center;
+  color: var(--ctp-subtext0);
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
+.leaderboard-no-results {
+  text-align: center;
+  color: var(--ctp-subtext0);
+  padding: 20px;
+  font-size: 14px;
+}
+
+.leaderboard-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ctp-surface1);
+}
+
+.pagination-btn {
+  background: var(--ctp-surface1);
+  color: var(--ctp-text);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--ctp-surface2);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--ctp-subtext0);
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.game-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 13px;
+  color: var(--ctp-subtext0);
+  z-index: 10;
+}
+
+.game-footer a {
+  color: var(--ctp-peach);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.game-footer a:hover {
+  opacity: 0.8;
+}
+
+/* ========================================
+   MODAL - Catppuccin style
+   ======================================== */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 16px;
+  color: var(--ctp-text);
+}
+
+.modal-title {
+  color: var(--ctp-text);
+}
+
+.modal-input {
+  background: var(--ctp-base);
+  border: 1px solid var(--ctp-surface2);
+  color: var(--ctp-text);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: var(--ctp-peach);
+}
+
+.modal-input::placeholder {
+  color: var(--ctp-overlay0);
+}
+
+.modal-btn {
+  background: var(--ctp-peach);
+  color: #1e1e2e;
+  font-weight: 700;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-btn:hover {
+  opacity: 0.9;
+}
+
+.modal-btn-secondary {
+  background: var(--ctp-surface1);
+  color: var(--ctp-text);
+}
+
+/* ========================================
+   LOADING SKELETON
+   ======================================== */
+.skeleton {
+  background: var(--ctp-surface1);
+  border-radius: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1200px) {
+  .leaderboard-fixed {
+    width: 280px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .page-container {
+    overflow: auto;
+    padding: 20px;
+  }
+  
+  .global-title {
+    position: static;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .top-score-header {
+    position: static;
+    transform: none;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  
+  .game-center {
+    position: static;
+    transform: none;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  
+  .leaderboard-fixed {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .leaderboard {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .global-title {
+    font-size: 48px;
+  }
+  
+  .top-score-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* ========================================
+   EMBED MODE (for iframe integration)
+   ======================================== */
+.embed-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  max-height: 100vh;
+  padding: 10px;
+  background: var(--bg-color);
+  overflow: hidden;
+}
+
+.embed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.embed-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--ctp-peach);
+  line-height: 1;
+}
+
+.embed-scores {
+  display: flex;
+  gap: 6px;
+}
+
+.embed-score-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface1);
+  border-radius: 6px;
+  padding: 4px 12px;
+  min-width: 60px;
+  height: 42px;
+  justify-content: center;
+}
+
+.embed-score-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ctp-subtext0);
+  letter-spacing: 0.5px;
+}
+
+.embed-score-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ctp-text);
+}
+
+.embed-new-btn {
+  background: var(--ctp-peach);
+  color: var(--ctp-base);
+  border: none;
+  border-radius: 6px;
+  padding: 0 14px;
+  height: 42px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.embed-new-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.embed-board-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  max-height: calc(100vh - 80px);
+}
+
+.embed-board-wrapper .game-board {
+  width: min(100%, calc(100vh - 100px));
+  max-width: min(380px, 100%);
+  height: auto;
+  aspect-ratio: 1;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.embed-board-wrapper .game-board .board-background {
+  inset: 12px;
+  gap: 12px;
+}
+
+.embed-board-wrapper .game-board .cell-bg {
+  border-radius: 8px;
+}
+
+/* Tile adjustments for embed - same as main game */
+.embed-board-wrapper .tile {
+  width: calc((100% - 36px) / 4) !important;
+  height: calc((100% - 36px) / 4) !important;
+  border-radius: 8px;
+}
+
+.embed-board-wrapper .tile:nth-child(n) {
+  --cell: calc((100% - 36px) / 4);
+  --gap: 12px;
+}
+
+/* Position overrides for embed tiles */
+.embed-page .tile {
+  width: calc((100% - 36px) / 4) !important;
+  height: calc((100% - 36px) / 4) !important;
+  border-radius: 8px !important;
+}
+
+@media (max-width: 500px) {
+  .game-board {
+    padding: 8px;
+  }
+  
+  .board-background {
+    inset: 8px;
+    gap: 8px;
+  }
+  
+  .score-box {
+    padding: 6px 14px;
+    min-width: 70px;
+  }
+}
+
+/* ========================================
+   SCROLLBAR - Catppuccin style
+   ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ctp-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ctp-surface2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ctp-overlay0);
+}
+
+::selection {
+  background: var(--ctp-mauve);
+  color: white;
 }
