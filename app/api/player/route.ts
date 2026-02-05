@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
           moves: s.moves,
           duration: s.duration,
           won: s.won,
-          date: s.createdAt,
+          date: new Date(Number(s.createdAt)).toISOString(),
         })),
       },
     });

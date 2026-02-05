@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         moves: score.moves,
         duration: score.duration,
         won: Boolean(score.won),
-        date: score.createdAt,
+        date: new Date(Number(score.createdAt)).toISOString(),
       }));
     } else {
       // Original behavior: all scores
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
         moves: score.moves,
         duration: score.duration,
         won: score.won,
-        date: score.createdAt,
+        date: new Date(Number(score.createdAt)).toISOString(),
       }));
     }
 
