@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: '/2048',
-  assetPrefix: '/2048',
   output: 'standalone',
   compress: true,
   poweredByHeader: false,
