@@ -53,8 +53,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy entrypoint script
+# Copy entrypoint and init scripts
 COPY entrypoint.sh /app/entrypoint.sh
+COPY init-db.js /app/init-db.js
 RUN chmod +x /app/entrypoint.sh
 
 # Create data directory for SQLite
