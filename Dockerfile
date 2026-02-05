@@ -36,6 +36,9 @@ RUN bun run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
+# Install sqlite3 for database initialization
+RUN apk add --no-cache sqlite
+
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -49,6 +52,10 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# Copy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Create data directory for SQLite
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app
@@ -67,4 +74,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 ENV DATABASE_URL=file:/app/data/game2048.db
-CMD ["node", "server.js"]
+ENTRYPOINT ["/app/entrypoint.sh"]
