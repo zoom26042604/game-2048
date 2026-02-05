@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 2048
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-First, run the development server:
+Implémentation moderne du jeu 2048 avec classement en ligne, statistiques globales et profils joueurs.
+
+**[Jouer](https://2048.nathan-ferre.fr)**
+
+---
+
+## Fonctionnalités
+
+- **Gameplay classique** : Fusionner les tuiles pour atteindre 2048
+- **Classement en ligne** : Compétition avec d'autres joueurs
+- **Statistiques globales** : Suivi des performances de tous les joueurs
+- **Profils joueurs** : Historique des scores et progression
+- **Mobile friendly** : Contrôles tactiles pour appareils mobiles
+- **Clavier** : Navigation avec les touches fléchées
+- **Mode embed** : Intégration possible dans d'autres sites
+
+---
+
+## Installation
+
+### Prérequis
+
+- Node.js 18+ ou Bun
+
+### Démarrage
 
 ```bash
+# Cloner le dépôt
+git clone https://github.com/zoom26042604/game-2048.git
+cd game-2048
+
+# Installer les dépendances
+npm install
+
+# Initialiser la base de données
+npx prisma db push
+
+# Lancer le serveur de développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le jeu sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack technique
 
-## Learn More
+| Technologie | Rôle |
+|-------------|------|
+| [Next.js 16](https://nextjs.org/) | Framework React avec App Router |
+| [TypeScript](https://www.typescriptlang.org/) | Typage statique |
+| [Prisma](https://www.prisma.io/) | ORM pour la base de données |
+| [SQLite](https://www.sqlite.org/) | Base de données locale |
+| [Tailwind CSS](https://tailwindcss.com/) | Framework CSS |
+| [Framer Motion](https://www.framer.com/motion/) | Animations des tuiles |
+| [Zustand](https://zustand-demo.pmnd.rs/) | Gestion d'état |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+game-2048/
+├── app/
+│   ├── api/             # Routes API (leaderboard, stats, player)
+│   ├── embed/           # Version embarquable du jeu
+│   ├── globals.css      # Styles globaux
+│   ├── layout.tsx       # Layout principal
+│   └── page.tsx         # Page du jeu
+├── components/
+│   ├── GameBoard.tsx    # Plateau de jeu
+│   ├── Tile.tsx         # Composant tuile
+│   ├── Leaderboard.tsx  # Classement
+│   ├── GlobalStats.tsx  # Statistiques
+│   └── PlayerProfile.tsx # Profil joueur
+├── lib/
+│   ├── game-store.ts    # État du jeu (Zustand)
+│   ├── prisma.ts        # Client Prisma
+│   └── events.ts        # Événements de jeu
+├── prisma/
+│   └── schema.prisma    # Schéma de la base de données
+└── scripts/
+    └── cleanup-db.ts    # Script de nettoyage BDD
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Comment jouer
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Utiliser les **touches fléchées** ou **glisser** sur mobile pour déplacer les tuiles
+2. Les tuiles de même valeur **fusionnent** quand elles se touchent
+3. Additionner les tuiles pour atteindre **2048**
+4. La partie se termine quand plus aucun mouvement n'est possible
+
+---
+
+## API
+
+| Endpoint | Méthode | Description |
+|----------|---------|-------------|
+| `/api/leaderboard` | GET | Récupérer le classement |
+| `/api/leaderboard` | POST | Soumettre un nouveau score |
+| `/api/stats` | GET | Statistiques globales |
+| `/api/player?name=` | GET | Profil d'un joueur |
+
+---
+
+## Mode Embed
+
+Le jeu peut être intégré dans d'autres sites via l'URL `/embed` :
+
+```html
+<iframe src="https://2048.nathan-ferre.fr/embed" width="400" height="500"></iframe>
+```
+
+---
+
+## Scripts
+
+| Commande | Description |
+|----------|-------------|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run start` | Serveur de production |
+| `npx prisma studio` | Interface de gestion BDD |
+| `npx prisma db push` | Synchroniser le schéma |
+
+---
+
+## Licence
+
+MIT License
+
+---
+
+## Crédits
+
+- Jeu original par [Gabriele Cirulli](https://play2048.co/)
+- Développé par [Nathan FERRE](https://github.com/zoom26042604)
