@@ -31,8 +31,8 @@ export async function GET(request: NextRequest) {
         maxTile: number;
         moves: number;
         duration: number;
-        won: boolean;
-        createdAt: Date;
+        won: number;
+        createdAt: bigint | number;
         playerName: string;
       }>>`
         SELECT s.id, s.value, s.maxTile, s.moves, s.duration, s.won, s.createdAt, p.name as playerName
