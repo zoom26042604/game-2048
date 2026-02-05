@@ -24,14 +24,14 @@ fi
 if [ "$NEEDS_INIT" = "1" ]; then
   echo "Initializing database schema..."
   
-  # Create database schema matching Prisma schema
+  # Create database schema matching Prisma schema with ISO-8601 datetime format
   sqlite3 "$DB_PATH" << 'EOF'
 -- Create Player table
 CREATE TABLE IF NOT EXISTS Player (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
-    createdAt TEXT NOT NULL DEFAULT (datetime('now')),
-    updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    createdAt TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    updatedAt TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 
 -- Create Score table
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Score (
     duration INTEGER NOT NULL,
     won INTEGER NOT NULL DEFAULT 0,
     playerId TEXT NOT NULL,
-    createdAt TEXT NOT NULL DEFAULT (datetime('now')),
+    createdAt TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     FOREIGN KEY (playerId) REFERENCES Player(id) ON DELETE CASCADE
 );
 
