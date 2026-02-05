@@ -30,13 +30,14 @@ async function initializeDatabase() {
       console.log('Creating database tables with Prisma-compatible schema...');
       
       // Create tables using SQL that Prisma expects
-      // For SQLite, DateTime is stored as INTEGER (Unix timestamp in milliseconds)
+      // For SQLite, DateTime is stored as BIGINT (Unix timestamp in milliseconds)
+      // Note: BIGINT is required because JavaScript timestamps can exceed INT range
       await prisma.$executeRawUnsafe(`
         CREATE TABLE IF NOT EXISTS Player (
           id TEXT PRIMARY KEY NOT NULL,
           name TEXT NOT NULL UNIQUE,
-          createdAt INTEGER NOT NULL,
-          updatedAt INTEGER NOT NULL
+          createdAt BIGINT NOT NULL,
+          updatedAt BIGINT NOT NULL
         )
       `);
       
@@ -49,7 +50,7 @@ async function initializeDatabase() {
           duration INTEGER NOT NULL,
           won INTEGER NOT NULL DEFAULT 0,
           playerId TEXT NOT NULL,
-          createdAt INTEGER NOT NULL,
+          createdAt BIGINT NOT NULL,
           FOREIGN KEY (playerId) REFERENCES Player(id) ON DELETE CASCADE
         )
       `);
